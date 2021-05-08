@@ -1,23 +1,32 @@
-import org.jsoup.Jsoup;
+import services.Calculator;
+import services.imp.html.HtmlWordCalculator;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.io.InputStreamReader;
 
 public class Main {
-    private static final String SEPARATORS_REGEX = "[\r\n\t,.!?;:()\\s\"\\[\\]]";
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("Должен быть 1 аргумент");
+    private static String url = "";
+    private static final String FILE_NAME = "page.html";
+    private static final BufferedReader READER = new BufferedReader(new InputStreamReader(System.in));
+
+    public static void main(String[] args) throws Exception {
+        if (args.length > 0) {
+            url = args[0];
+        } else {
+            readIn();
         }
-        String url = args[0];
-        try {
-            String html = Jsoup.connect(url).get().html();
-            System.out.println(html);
-            String[] bbb = html.split(SEPARATORS_REGEX);
-            System.out.println(bbb);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+
+        Calculator calculator = new HtmlWordCalculator();
+        while (true) {
+            calculator.start(url, FILE_NAME);
+            readIn();
         }
     }
+
+    private static void readIn() throws IOException {
+        System.out.println("Enter URL: ");
+        url = READER.readLine();
+    }
+
 }
